@@ -2,6 +2,21 @@ from airflow.hooks.postgres_hook import PostgresHook
 from airflow.models import BaseOperator
 from airflow.utils.decorators import apply_defaults
 
+"""
+    LoadFactOperator:
+    
+    Loads the fact data from the staging Redshift table.
+    
+    Inputs:
+        
+        conn_id: str                -> reshift connection id saved in the airflow connections
+        sql_stmt:str                -> SQL statement to be run
+        table:str                   -> target table name in redshift to insert fact data
+        append_table:bool           -> Insert into table in append mode or truncate the table and then insert
+        
+"""
+
+
 class LoadFactOperator(BaseOperator):
 
     ui_color = '#F98866'

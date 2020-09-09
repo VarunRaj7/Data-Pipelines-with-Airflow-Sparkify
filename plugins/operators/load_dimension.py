@@ -2,6 +2,20 @@ from airflow.hooks.postgres_hook import PostgresHook
 from airflow.models import BaseOperator
 from airflow.utils.decorators import apply_defaults
 
+"""
+    LoadDimensionOperator:
+    
+    Loads the dimension data from the staging Redshift table.
+    
+    Inputs:
+        
+        conn_id: str                -> reshift connection id saved in the airflow connections
+        sql_stmt:str                -> SQL statement to be run
+        table:str                   -> target table name in redshift to insert dimension data
+        
+"""
+
+
 class LoadDimensionOperator(BaseOperator):
 
     ui_color = '#80BD9E'

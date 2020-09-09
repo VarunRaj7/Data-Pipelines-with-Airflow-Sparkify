@@ -2,6 +2,19 @@ from airflow.hooks.postgres_hook import PostgresHook
 from airflow.models import BaseOperator
 from airflow.utils.decorators import apply_defaults
 
+"""
+    DataQualityOperator:
+    
+    Loads the dimension data from the staging Redshift table.
+    
+    Inputs:
+        
+        conn_id: str                                  -> reshift connection id saved in the airflow connections
+        stmt_res:list(tuple(str, str))                -> SQL statement to be run to check the data and expected result
+        
+"""
+
+
 class DataQualityOperator(BaseOperator):
 
     ui_color = '#89DA59'
