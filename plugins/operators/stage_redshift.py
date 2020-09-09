@@ -38,13 +38,13 @@ class StageToRedshiftOperator(BaseOperator):
     
     @apply_defaults
     def __init__(self,
-                 redshift_conn_id=""
+                 redshift_conn_id="",
                  aws_credentials_id="",
                  table="",
                  s3_bucket="",
                  s3_key="",
                  file_format="",
-                 optional_parameters=[]
+                 optional_parameters=[],
                  *args, **kwargs):
 
         super(StageToRedshiftOperator, self).__init__(*args, **kwargs)
@@ -63,7 +63,7 @@ class StageToRedshiftOperator(BaseOperator):
         if self.file_format not in FF_SET:
             raise ValueError(f"InValid file format {self.file_format}. It should be any of {S3ToRedshiftOperator.FF_SET}")
             
-                aws_hook = AwsHook(self.aws_credentials_id)
+        aws_hook = AwsHook(self.aws_credentials_id)
         credentials = aws_hook.get_credentials()
         redshift = PostgresHook(postgres_conn_id=self.redshift_conn_id)
 

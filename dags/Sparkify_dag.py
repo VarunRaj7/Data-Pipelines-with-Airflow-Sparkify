@@ -2,12 +2,12 @@ from datetime import datetime, timedelta
 import os
 from airflow import DAG
 from airflow.operators.dummy_operator import DummyOperator
-from airflow.operators import (StageToRedshiftOperator, LoadFactOperator,
-                                LoadDimensionOperator, DataQualityOperator)
+from airflow.operators import StageToRedshiftOperator, LoadFactOperator, LoadDimensionOperator, DataQualityOperator
+
 from helpers import SqlQueries
 
 default_args = {
-    'owner': 'Udacity and Varun',
+    'owner': 'Udacity_and_Varun',
     'start_date': datetime.now(), #datetime(2019, 1, 12),
     'depends_on_past': False,
     'retries': 3,
@@ -51,7 +51,7 @@ load_songplays_table = LoadFactOperator(
     dag=dag,
     conn_id="redshift",
     sql_stmt=SqlQueries.songplay_table_insert,
-    table=songplays,
+    table="public.songplays",
     append_to_table=False
 )
 
@@ -60,7 +60,7 @@ load_user_dimension_table = LoadDimensionOperator(
     dag=dag,
     conn_id="redshift",
     sql_stmt=SqlQueries.user_table_insert,
-    table=users
+    table="public.users"
 )
 
 load_song_dimension_table = LoadDimensionOperator(
@@ -95,3 +95,17 @@ run_quality_checks = DataQualityOperator(
 )
 
 end_operator = DummyOperator(task_id='Stop_execution',  dag=dag)
+
+start_operator >> stage_events_to_redshift
+stage_events_to_redshift >> load_songplays_table
+start_operator >> stage_songs_to_redshift
+stage_songs_to_redshift >> load_songplays_table
+load_songplays_table >> load_song_dimension_table
+load_songplays_table >> load_user_dimension_table
+load_songplays_table >> load_artist_dimension_table 
+load_songplays_table >> load_time_dimension_table
+load_song_dimension_table >> run_quality_checks
+load_user_dimension_table >> run_quality_checks
+load_artist_dimension_table >> run_quality_checks
+load_time_dimension_table >> run_quality_checks
+run_quality_checks >> end_operator
