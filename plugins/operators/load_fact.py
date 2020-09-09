@@ -31,6 +31,6 @@ class LoadFactOperator(BaseOperator):
             self.log.info(f'Truncating {self.table}')
             redshift.run('TRUNCATE {}'.format(self.table))
             
-        stmt = 'INSERT INTO {} FROM'+' ( '+self.sql_stmt+' ) '
+        stmt = 'INSERT INTO {}'+' ( '+self.sql_stmt+' ) '
         redshift.run(stmt.format(self.table))
         self.log.info(f'Successful execution of LoadFactOperator for {self.table}')

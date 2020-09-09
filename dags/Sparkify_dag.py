@@ -30,9 +30,10 @@ stage_events_to_redshift = StageToRedshiftOperator(
     table="staging_events",
     redshift_conn_id="redshift",
     aws_credentials_id="aws_credentials",
-    s3_bucket="s3://udacity-dend/log_data",
+    s3_bucket="udacity-dend/log_data",
     s3_key="",
-    optional_parameters=["FORMAT AS JSON", "s3://udacity-dend/log_json_path.json", "TIMEFORMAT AS 'epochmillisecs';"]
+    file_format="JSON",
+    optional_parameters=["FORMAT AS JSON", "'s3://udacity-dend/log_json_path.json'", "TIMEFORMAT AS 'epochmillisecs';"]
 )
 
 stage_songs_to_redshift = StageToRedshiftOperator(
@@ -41,9 +42,10 @@ stage_songs_to_redshift = StageToRedshiftOperator(
     table="staging_songs",
     redshift_conn_id="redshift",
     aws_credentials_id="aws_credentials",
-    s3_bucket="s3://udacity-dend/song_data",
+    s3_bucket="udacity-dend/song_data",
     s3_key="",
-    optional_parameters=["FORMAT AS JSON 'AUTO';"]
+    file_format="JSON",
+    optional_parameters=["FORMAT AS JSON 'auto';"]
 )
 
 load_songplays_table = LoadFactOperator(
@@ -91,7 +93,8 @@ run_quality_checks = DataQualityOperator(
     task_id='Run_data_quality_checks',
     dag=dag,
     conn_id="redshift",
-    stmt_res=[["SELECT COUNT(*) FROM public.songplays WHERE songplay_id IS NULL",0]]
+    stmt_res=[("SELECT COUNT(*) FROM public.songplays WHERE user_id IS NULL",0),\
+             ("SELECT COUNT(*) FROM public.songplays WHERE star_time IS NULL",0)]
 )
 
 end_operator = DummyOperator(task_id='Stop_execution',  dag=dag)

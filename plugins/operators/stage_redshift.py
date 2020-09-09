@@ -60,8 +60,8 @@ class StageToRedshiftOperator(BaseOperator):
     def execute(self, context):
         self.log.info('Starting to implement StageToRedshiftOperator')
         
-        if self.file_format not in FF_SET:
-            raise ValueError(f"InValid file format {self.file_format}. It should be any of {S3ToRedshiftOperator.FF_SET}")
+        if self.file_format not in StageToRedshiftOperator.FF_SET:
+            raise ValueError(f"InValid file format {self.file_format}. It should be any of {StageToRedshiftOperator.FF_SET}")
             
         aws_hook = AwsHook(self.aws_credentials_id)
         credentials = aws_hook.get_credentials()
@@ -73,12 +73,12 @@ class StageToRedshiftOperator(BaseOperator):
         self.log.info("Copying data from S3 to Redshift")
         rendered_key = self.s3_key.format(**context)
         s3_path = "s3://{}/{}".format(self.s3_bucket, rendered_key)
-        formatted_sql = S3ToRedshiftOperator.copy_sql.format(
+        formatted_sql = StageToRedshiftOperator.copy_sql.format(
             self.table,
             s3_path,
             credentials.access_key,
             credentials.secret_key,
-            "\n\t\t\t".join(self.optional_parameters)
+            "\n\t".join(self.optional_parameters)
         )
         self.log.info(f"Copy SQL: {formatted_sql}")
         redshift.run(formatted_sql)
