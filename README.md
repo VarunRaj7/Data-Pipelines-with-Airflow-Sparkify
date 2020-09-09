@@ -39,7 +39,7 @@ In the DAG, add default parameters according to these guidelines
 
 The main issue one can encounter is the broken dag, this is mainly due to the errors in the operators or helpers or dag itself. These errors can be seen when you run `/opt/airflow/start.sh` or `python -c "from airflow.models import DagBag; d = DagBag();"`
 
-Reference:!(https://towardsdatascience.com/5-essential-tips-when-using-apache-airflow-to-build-an-etl-pipeline-for-a-database-hosted-on-3d8fd0430acc)
+Reference:[Medium link](https://towardsdatascience.com/5-essential-tips-when-using-apache-airflow-to-build-an-etl-pipeline-for-a-database-hosted-on-3d8fd0430acc)
 
 
 
